@@ -16,9 +16,9 @@ axes = axes.flatten()
 
 for ax, (activity_name, file_path) in zip(axes,paths.items()):
     activity_data = np.genfromtxt(file_path, delimiter=',', skip_header=1)
-    ax.plot(activity_data[:,0], label='accx')
-    ax.plot(activity_data[:,1], label='accy')
-    ax.plot(activity_data[:,2], label='accz')
+    ax.plot(activity_data[:500,0], label='accx')
+    ax.plot(activity_data[:500,1], label='accy')
+    ax.plot(activity_data[:500,2], label='accz')
 
     ax.set_title(activity_name)
     ax.set_xlabel('Time')
