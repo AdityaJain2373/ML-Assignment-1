@@ -115,8 +115,6 @@ def tsfel_data(X_train_final,X_test_final,y_train_final,y_test_final):
 
     return(pca_train_df, pca_test_df)
 
-
-
 def Model(X_train_final, y_train_final, X_test_final, y_test_final):
 
     model = DecisionTreeClassifier()
