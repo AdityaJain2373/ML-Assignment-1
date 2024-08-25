@@ -136,7 +136,9 @@ def Model(X_train_final, y_train_final, X_test_final, y_test_final):
 if __name__ == "__main__":
     X_train_final, y_train_final, X_test_final, y_test_final = data_analysis(train_paths, test_paths)
     pca_train_df, pca_test_df = tsfel_data(X_train_final, X_test_final,y_train_final,y_test_final)
+    print("Metrics of TSFEL Data")
     Model(pca_train_df,y_train_final,pca_test_df,y_test_final)
+    print("Metrics of RAW Data")
     Model(X_train_final,y_train_final,X_test_final,y_test_final)
 
 
