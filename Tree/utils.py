@@ -18,8 +18,8 @@ def entropy(Y: pd.Series) -> float:
     """
     Function to calculate the entropy without using any additional libraries.
     """
-    probs = Y.value_counts(normalize=True)  # Calculate the probability of each class
-    return -sum(probs * probs.apply(lambda p: (0 if p == 0 else log2(p))))
+    prob = Y.value_counts(normalize=True) 
+    return -sum(prob * prob.apply(lambda p: (0 if p == 0 else log2(p))))
 
 def log2(x):
     """
@@ -36,31 +36,6 @@ def mse(Y: pd.Series) -> float:
     mean_y = Y.mean()
     return ((Y - mean_y) ** 2).mean()
 
-# def information_gain(Y: pd.Series, attr: pd.Series, criterion: str) -> float:
-#     if criterion == "information_gain":
-#         base_criterion = entropy(Y)
-#     elif criterion == "gini_index":
-#         base_criterion = gini_index(Y)
-#     else:
-#         base_criterion = mse(Y)
-
-#     values = attr.unique()
-#     weighted_sum = 0
-#     for val in values:
-#         subset = Y[attr == val]
-#         weight = len(subset) / len(Y)
-#         if criterion == "information_gain":
-#             weighted_sum += weight * entropy(subset)
-#         elif criterion == "gini_index":
-#             weighted_sum += weight * gini_index(subset)
-#         else:
-#             weighted_sum += weight * mse(subset)
-    
-#     if criterion in ["information_gain", "gini_index"]:
-#         return base_criterion - weighted_sum
-#     else:
-#         return weighted_sum
-
 
 def information_gain(Y: pd.Series, attr: pd.Series, criterion: str) -> float:
     if criterion == "information_gain":
@@ -70,8 +45,8 @@ def information_gain(Y: pd.Series, attr: pd.Series, criterion: str) -> float:
     else:
         base_criterion = mse(Y)
 
-    if check_ifreal(attr):  # Assuming check_ifreal determines if attr is continuous
-        threshold = attr.median()  # You can choose a different method for the threshold
+    if check_ifreal(attr): 
+        threshold = attr.median() 
         left_subset = Y[attr <= threshold]
         right_subset = Y[attr > threshold]
         
