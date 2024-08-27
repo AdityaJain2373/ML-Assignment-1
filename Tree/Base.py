@@ -7,7 +7,6 @@ You will be expected to use this to make trees for:
 > discrete input, real output
 """
 from dataclasses import dataclass
-from typing import Literal
 
 import numpy as np
 import pandas as pd
@@ -30,16 +29,16 @@ class Node():
 
 
 class DecisionTree:
-    def __init__(self, criterion, max_depth=5):  # Fixed __init__ typo
+    def __init__(self, criterion, max_depth=5):  
         self.criterion = criterion
         self.max_depth = max_depth
         self.root = None
 
     def fit(self, X: pd.DataFrame, y: pd.Series):
-        features = list(X.columns)  # Ensure features is a list
-        self.root = self._grow_tree(X, y, features, depth=0)
+        features = list(X.columns) 
+        self.root = self.build_tree(X, y, features, depth=0)
 
-    def _grow_tree(self, X, y, features, depth):
+    def build_tree(self, X, y, features, depth):
         if len(set(y)) == 1 or depth == self.max_depth or len(features) == 0:
             return Node(value=y.mode()[0] if not check_ifreal(y) else y.mean())
         
@@ -54,34 +53,34 @@ class DecisionTree:
         if len(y_left) == 0 or len(y_right) == 0:
             return Node(value=y.mode()[0] if not check_ifreal(y) else y.mean())
         
-        remaining_features = [f for f in features if f != best_feature]  # Corrected feature removal
-        left_child = self._grow_tree(X_left, y_left, remaining_features, depth + 1)
-        right_child = self._grow_tree(X_right, y_right, remaining_features, depth + 1)
+        remaining_features = [f for f in features if f != best_feature] 
+        left_child = self.build_tree(X_left, y_left, remaining_features, depth + 1)
+        right_child = self.build_tree(X_right, y_right, remaining_features, depth + 1)
         return Node(feature=best_feature, threshold=threshold, left=left_child, right=right_child)
 
     def predict(self, X: pd.DataFrame) -> pd.Series:
-        return X.apply(self._traverse_tree, axis=1, args=(self.root,))
+        return X.apply(self.traverse_tree, axis=1, args=(self.root,))
     
-    def _traverse_tree(self, x, node):
+    def traverse_tree(self, x, node):
         if node.value is not None:
             return node.value
         
         if node.threshold is None:
             if x[node.feature] == 1:
-                return self._traverse_tree(x, node.left)
+                return self.traverse_tree(x, node.left)
             else:
-                return self._traverse_tree(x, node.right)
+                return self.traverse_tree(x, node.right)
         
         if check_ifreal(x[node.feature]):
             if x[node.feature] <= node.threshold:
-                return self._traverse_tree(x, node.left)
+                return self.traverse_tree(x, node.left)
             else:
-                return self._traverse_tree(x, node.right)
+                return self.traverse_tree(x, node.right)
         else:
             if x[node.feature] == node.threshold:
-                return self._traverse_tree(x, node.left)
+                return self.traverse_tree(x, node.left)
             else:
-                return self._traverse_tree(x, node.right)
+                return self.traverse_tree(x, node.right)
 
     def plot(self, node=None, indent=""):
         if node is None:
