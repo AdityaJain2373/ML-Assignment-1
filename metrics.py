@@ -21,26 +21,17 @@ def precision(y_hat: pd.Series, y: pd.Series, cls: Union[int, str]) -> float:
     """
     Function to calculate the precision
     """
-    # assert y_hat.size == y.size
-    # cls_series = pd.Series([cls] * len(y_hat))
-    # true_positive = np.sum((y == y_hat) & (y == cls_series))
-    # true_predicted = np.sum(y_hat == cls_series)
-    # prec = float(true_positive / true_predicted) if true_predicted > 0 else 0.0
-    # return prec
 
     assert y_hat.size == y.size, "Size of y_hat and y must be the same"
-    
-    # Align the indices
+
     y, y_hat = y.align(y_hat)
-    
-    # Create a boolean Series for the class
+
     cls_series = pd.Series([cls] * len(y_hat), index=y_hat.index)
     
-    # Calculate true positives and true predicted
+
     true_positive = np.sum((y == y_hat) & (y == cls_series))
     true_predicted = np.sum(y_hat == cls_series)
-    
-    # Calculate precision
+
     prec = float(true_positive / true_predicted) if true_predicted > 0 else 0.0
     
     return prec
